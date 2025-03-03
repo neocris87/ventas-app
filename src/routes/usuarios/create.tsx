@@ -1,4 +1,7 @@
+import { userCreate } from "@/api/user";
+import { UsuarioCreate } from "@/types";
 import {
+  addToast,
   Button,
   Card,
   CardBody,
@@ -18,34 +21,40 @@ export const Route = createFileRoute("/usuarios/create")({
   component: RouteComponent,
 });
 
-type FormData = {
-  usuario: string;
-  nombre: string;
-  email: string;
-  password: string;
-  estado: boolean;
-  roles: string[];
-  contacto: string;
-  direccion: string;
-};
+
 
 function RouteComponent() {
   const nav = useNavigate();
 
-  // const mutation = useMutation<FormData>({
-  //   mutationKey : ["create-user"],
-  //   mutationFn: async (data) => {
+  const mutation = useMutation({
+    mutationKey: ["create-user"],
+    mutationFn: (usuario: UsuarioCreate) => userCreate(usuario),
+    onSuccess: () => {
+      addToast({
+        title: "Usuario Creado",
+        description: "El usuario creado correctamente",
+        color: "success",
+        timeout: 2000,
 
-  //   }
-  // });
+      });
+      nav({ to: "/usuarios" });
+    },
+    onError: (error) => {
+      mutation.reset();
+      addToast({
+        title: "Error",
+        description: error.message,
+        color: "danger",
+        timeout: 2000,
+      });
+    }
+  });
 
-  const [form, setForm] = useState<FormData>({
+  const [form, setForm] = useState<UsuarioCreate>({
     usuario: "",
     nombre: "",
-    email: "",
     password: "",
-    estado: true,
-    roles: ["Admin", "Cliente"],
+    roles: [],
     contacto: "",
     direccion: "",
   });
@@ -53,7 +62,7 @@ function RouteComponent() {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log(form);
+    mutation.mutate(form);
   };
 
   return (
@@ -72,17 +81,6 @@ function RouteComponent() {
             <CardHeader title="Agregar Usuario" />
             <CardBody>
               <Form onSubmit={onSubmit}>
-                <Checkbox
-                  name="estado"
-                  color="success"
-                  defaultSelected={form.estado}
-                  onChange={(e) =>
-                    setForm({ ...form, estado: e.target.checked })
-                  }
-                >
-                  Estado
-                </Checkbox>
-
                 <Input
                   label="Nombre"
                   name="nombre"
@@ -147,7 +145,7 @@ function RouteComponent() {
                 />
 
                 <div className="flex w-full justify-end ">
-                  <Button type="submit" color="success" className="text-white">
+                  <Button type="submit" color="success" className="text-white" disabled={!mutation.isIdle} isLoading={!mutation.isIdle}>
                     Agregar
                     <FaPlusCircle size={24} />
                   </Button>

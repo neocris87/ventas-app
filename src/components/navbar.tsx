@@ -5,18 +5,16 @@ import {
   DrawerContent,
   DrawerHeader,
   Navbar as HeroUINavbar,
-  NavbarBrand,
   NavbarContent,
   NavbarItem,
   useDisclosure,
   ListboxItem,
   Listbox,
+  Image,
 } from "@heroui/react";
-// import clsx from "clsx";
 
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Link } from "@tanstack/react-router";
-import { Image } from "@heroui/image";
 
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 
@@ -33,12 +31,8 @@ export const Navbar = () => {
             </Button>
           </NavbarItem>
 
-          <NavbarBrand className="gap-3 max-w-fit">
-            <Link
-              className="flex justify-start items-center gap-1 p-2"
-              color="foreground"
-              to="/"
-            >
+          <NavbarItem>
+            <Link className="flex justify-start items-center"  color="foreground"   to="/" >
               <Image
                 src="/logo.png"
                 alt="Logo"
@@ -47,32 +41,19 @@ export const Navbar = () => {
                 className="bg-slate-100"
               />
             </Link>
-          </NavbarBrand>
+          </NavbarItem>
 
-          {/* <NavbarItem>
-          <Link color="foreground" to="/about">
-            Hello
-          </Link>
-        </NavbarItem> */}
           <NavbarItem>
             <Link color="foreground" to="/usuarios">
               Usuarios
             </Link>
           </NavbarItem>
-        </NavbarContent>
+        </NavbarContent>      
 
-        <NavbarContent
-          className="hidden sm:flex basis-1/5 sm:basis-full"
-          justify="end"
-        >
-          <NavbarItem className="hidden sm:flex gap-2">
-            <ThemeSwitch />
-          </NavbarItem>
-        </NavbarContent>
-
-        <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+        <NavbarContent className="basis-1 pl-4" justify="end">
           <ThemeSwitch />
         </NavbarContent>
+
       </HeroUINavbar>
 
       <Drawer isOpen={isOpen} size="sm" onClose={onClose} placement="left">

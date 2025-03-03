@@ -15,6 +15,7 @@ import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 import { Route as UsuariosIndexImport } from './routes/usuarios/index'
 import { Route as UsuariosCreateImport } from './routes/usuarios/create'
+import { Route as UsuariosUpdateIdEditImport } from './routes/usuarios/update.$id.edit'
 
 // Create/Update Routes
 
@@ -39,6 +40,12 @@ const UsuariosIndexRoute = UsuariosIndexImport.update({
 const UsuariosCreateRoute = UsuariosCreateImport.update({
   id: '/usuarios/create',
   path: '/usuarios/create',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const UsuariosUpdateIdEditRoute = UsuariosUpdateIdEditImport.update({
+  id: '/usuarios/update/$id/edit',
+  path: '/usuarios/update/$id/edit',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -74,6 +81,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UsuariosIndexImport
       parentRoute: typeof rootRoute
     }
+    '/usuarios/update/$id/edit': {
+      id: '/usuarios/update/$id/edit'
+      path: '/usuarios/update/$id/edit'
+      fullPath: '/usuarios/update/$id/edit'
+      preLoaderRoute: typeof UsuariosUpdateIdEditImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -84,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/usuarios/create': typeof UsuariosCreateRoute
   '/usuarios': typeof UsuariosIndexRoute
+  '/usuarios/update/$id/edit': typeof UsuariosUpdateIdEditRoute
 }
 
 export interface FileRoutesByTo {
@@ -91,6 +106,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/usuarios/create': typeof UsuariosCreateRoute
   '/usuarios': typeof UsuariosIndexRoute
+  '/usuarios/update/$id/edit': typeof UsuariosUpdateIdEditRoute
 }
 
 export interface FileRoutesById {
@@ -99,14 +115,31 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/usuarios/create': typeof UsuariosCreateRoute
   '/usuarios/': typeof UsuariosIndexRoute
+  '/usuarios/update/$id/edit': typeof UsuariosUpdateIdEditRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/usuarios/create' | '/usuarios'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/usuarios/create'
+    | '/usuarios'
+    | '/usuarios/update/$id/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/usuarios/create' | '/usuarios'
-  id: '__root__' | '/' | '/about' | '/usuarios/create' | '/usuarios/'
+  to:
+    | '/'
+    | '/about'
+    | '/usuarios/create'
+    | '/usuarios'
+    | '/usuarios/update/$id/edit'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/usuarios/create'
+    | '/usuarios/'
+    | '/usuarios/update/$id/edit'
   fileRoutesById: FileRoutesById
 }
 
@@ -115,6 +148,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   UsuariosCreateRoute: typeof UsuariosCreateRoute
   UsuariosIndexRoute: typeof UsuariosIndexRoute
+  UsuariosUpdateIdEditRoute: typeof UsuariosUpdateIdEditRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -122,6 +156,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   UsuariosCreateRoute: UsuariosCreateRoute,
   UsuariosIndexRoute: UsuariosIndexRoute,
+  UsuariosUpdateIdEditRoute: UsuariosUpdateIdEditRoute,
 }
 
 export const routeTree = rootRoute
@@ -137,7 +172,8 @@ export const routeTree = rootRoute
         "/",
         "/about",
         "/usuarios/create",
-        "/usuarios/"
+        "/usuarios/",
+        "/usuarios/update/$id/edit"
       ]
     },
     "/": {
@@ -151,6 +187,9 @@ export const routeTree = rootRoute
     },
     "/usuarios/": {
       "filePath": "usuarios/index.tsx"
+    },
+    "/usuarios/update/$id/edit": {
+      "filePath": "usuarios/update.$id.edit.tsx"
     }
   }
 }
